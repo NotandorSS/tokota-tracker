@@ -26,8 +26,8 @@ export class TrackerHpComponent implements OnInit {
 
   ngOnInit() {
     this.initTiers();
-    this.initVars();
     console.log("this toko", this.toko);
+    this.initVars();
     console.log("this hp", this.hp);
   }
 
