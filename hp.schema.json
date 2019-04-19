@@ -1,0 +1,148 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "tokota": {
+            "id": "#tokota",
+            "type": "object",
+            "description": "for all non-starter tokotas in an image",
+            "properties": {
+                "ID": {
+                    "type": "number"
+                },
+                "comp": {
+                    "type": "number",
+                    "description": "1=1, 2=2, 3+=3"
+                },
+                "QL": {
+                    "type": "object",
+                    "properties": {
+                        "HP": {
+                            "type": "number"
+                        },
+                        "link": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "ID"
+            ]
+        },
+        "tokoSpef": {
+            "id": "#tokoSpef",
+            "type": "object",
+            "properties": {
+                "val": {
+                    "type": "number"
+                },
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            }
+        }
+    },
+    "type": "object",
+    "properties": {
+        "link": {
+            "type": "string"
+        },
+        "source": {
+            "type": "string",
+            "description": "if left blank, assumed to be lit"
+        },
+        "name": {
+            "type": "string"
+        },
+        "id": {
+            "type": "number"
+        },
+        "tokotas": {
+            "type": "array",
+            "items": {
+                "$ref": "#tokota"
+            }
+        },
+        "date": {
+            "type": "string",
+            "description": "YYYY-MM-DD"
+        },
+        "qual": {
+            "type": "number",
+            "description": "SK=1, UC=2, UC/S=3, C=4, C/S=5"
+        },
+        "chibi": {
+            "type": "boolean"
+        },
+        "recol": {
+            "type": "boolean"
+        },
+        "bg": {
+            "type": "boolean"
+        },
+        "ownwork": {
+            "type": "number",
+            "description": "non-com=1, collab=2"
+        },
+        "handler": {
+            "type": "boolean"
+        },
+        "starter": {
+            "type": "number",
+            "description": "0=no starter, else starter: id number"
+        },
+        "lore": {
+            "type": "string",
+            "description": "''=no lore, else lore: description"
+        },
+        "affil": {
+            "type": "number",
+            "description": "1=1, 2=2, 3+=3"
+        },
+        "hs": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "description": "id of tokos w/ hs"
+            }
+        },
+        "fb": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "description": "id of tokos w/ fb"
+            }
+        },
+        "outfit": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "description": "IDs of tokotas both drawn with tack and having outfitted trait"
+            }
+        },
+        "wc": {
+            "$ref": "#tokoSpef"
+        },
+        "act": {
+            "$ref": "#tokoSpef",
+            "description": "val=1:hunt,val=2:fish,val=3:explore,val=4:cave,val=5:dive,val=6:breed,val=7:heal,val=8:rite,val=9:show"
+        },
+        "quest": {
+            "$ref": "#tokoSpef"
+        },
+        "sheet": {
+            "type": "number",
+            "description": "multiplier for hp sheets"
+        }
+    },
+    "required": [
+        "link",
+        "name",
+        "tokotas",
+        "date",
+        "id"
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "hierarchy": {
+            "type": "number",
+            "description": "0=sub,3=alpha"
+        },
+        "build": {
+            "type": "number",
+            "description": "0=toki,1=toko,2=dire,3=akota"
+        }
+    },
+    "required": [
+        "id", "hierarchy", "build"
+    ]
+}

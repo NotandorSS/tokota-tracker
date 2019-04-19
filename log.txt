@@ -1,0 +1,7 @@
+3/20/2019
+  ng new tokota-tracking
+    routing, css
+  ng generate component overview
+  ng generate service tracking
+  npm install @angular/fire firebase --save
+    npm install --save-dev karma@4.0.1
