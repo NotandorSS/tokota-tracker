@@ -25,7 +25,11 @@ export class TrackerHpComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initTiers();
+    this.id = +this.route.snapshot.paramMap.get('id');
+    //this.getTracked2().subscribe(toko => this.toko = toko);
+    this.getTracked();
+    //get HP
+    this.getHP();
     console.log("this toko", this.toko);
     this.initVars();
     console.log("this hp", this.hp);
