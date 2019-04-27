@@ -8,12 +8,14 @@
   <h6 class="text-center font-weight-light">back to secret's tokotas</h6>
 </a>
 <a href="https://tokotna.com/imports/index.php?id={{id}}" class="text-dark">
-  <h1 class="text-center">{{id}}'s import</h1>
+  <h1 class="text-center" *ngIf="toko">{{toko.id}}'s import</h1>
 </a>
 <a href="https://tokotna.com/tribes/index.php?tribe=Lunar+Aegis" class="text-dark">
   <h3 class="text-center">Lunar Aegis Tribe</h3>
 </a>
-
+<!-- <div>
+  {{Tiers}}
+</div> -->
 <div id="accordion">
     <p class="text-center">
       <ng-container *ngFor="let tier of Tiers">

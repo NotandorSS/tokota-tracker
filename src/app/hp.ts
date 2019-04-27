@@ -1,55 +1,45 @@
 export class HP {
-    link: string = '';      //name and id gotten from link string
-    source: string = '';    //if left blank, assumed to be lit
-    date: string = '';      //YYYY-MM-DD
-    tokotas: Tokota[];
-    qual: number = 0;       //SK=1, UC=2, UC/S=3, C=4, C/S=5
-    chibi: boolean = false;
-    recol: boolean = false;
-    bg: boolean = false;
-    hs: number[] = [];      //id of tokos w/ hs
-    fb: number[] = [];      //id of tokos w/ fb
-    sheet: number = 0;      //multiplier for hp sheets
-    ownwork: number = 0;    //non-com=2, collab=1
-    handler: boolean = false;
-    starter: number = 0;    //0=no starter, else starter: id number
-    lore: string = '';      //''=no lore, else lore: description
-    affil: number = 0;      //1=1, 2=2, 3+=3
-    outfit: number[] = [];  //id of tokos both drawn with tack and having outfitted trait
-    wc: TokoSpef;
-    act: TokoSpef;          //val=1:hunt,val=2:fish,val=3:explore,val=4:cave,val=5:dive,val=6:breed,val=7:heal,val=8:rite,val=9:show
-    quest: TokoSpef;
-    count: number = 1;
-
-    constructor() { }
-
+    constructor(
+        public link: string,
+        public src: string,
+        public name: string,
+        public date: string,
+        public tokos: number[],
+        public artists: string[],
+        public starter: number,
+        public hs: number[],      //id of tokos that aren't fb
+        public qual: number,      //SK=0, UC=1, UC/S=1.5, C=2, C/S=3
+        public bg: boolean,
+        public wc: TokoSpef,
+        public act: TokoSpef,     //1:hunt,2:fish,3:explore,4:cave,5:dive,6:breed,7:heal,8:rite,9:show,10:event
+        public show: {[k: string]: Spef},  //show = {'123456': new Spef(123456, 3, 'link'), etc}
+        //show - 1st, 2nd, 3rd places
+        public quest: TokoSpef,
+        public handler: boolean,
+        public lore: string,      //''=no lore, else lore: description
+        public companions: string[],
+        public arpg: string[],    //array of links to arpg imports
+        public QL: {[k: string]: Spef},  //QL = {'123456': new Spef(123456, 3, 'link'), etc}
+    ) { }
 }
 
-export class Tokota {   //for all non-starter tokotas in an image
-    id: number;
-    comp: number = 0;       //1=1, 2=2, 3+=3
-    QLn: number = 0;
-    QLl: string = '';
-
-    constructor() { }
+export class Spef {
+    constructor(public id: number, public val: number, public link: string) {}
 }
 
 export class TokoSpef {
-
-    val: number = 0;
-    ids: number[] = [];
-
-    constructor() { }
+    constructor(public val: number, public ids: number[]) {}
 }
 
-/* tokotna hp calc includes:
-   alpha
-   superstar (i/ii)
-   brother bear
-   fun sized
-   tribemate
-   skunk companion
-
+/* features to be added later:
+   chibi
+   recol
+   sheets
+   prehistoric companions
+   other places in show
+   outfitted
+   social
+   skunk companion? Cause how does it work?
    animations
    crafts
 */

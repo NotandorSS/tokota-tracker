@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { HP, Tokota, TokoSpef } from '../hp';
+import { HP, TokoSpef } from '../hp';
 import { TrackingService } from '../tracking.service';
 
 @Component({
@@ -10,8 +10,8 @@ import { TrackingService } from '../tracking.service';
 })
 export class HpFormComponent implements OnInit {
 
-  model = new HP();
-  submitted = false;
+  /* model = new HP('', '', []);
+  submitted = false; */
 
   constructor(private trackingService: TrackingService) { }
 
@@ -20,26 +20,26 @@ export class HpFormComponent implements OnInit {
   }
 
 
-  onSubmit() {
+  /* onSubmit() {
     this.submitted = true;
     console.log(this.model);
     //database stuff here?
     this.trackingService.addHP(this.model);
-  }
+  } */
 
   newForm() {
-    this.model = new HP();
-    this.model.tokotas = new Array(new Tokota());
-    this.model.wc = new TokoSpef();
-    this.model.act = new TokoSpef();
-    this.model.quest = new TokoSpef();
+    /* this.model = new HP('', '', []);
+    //this.model.tokotas = new Array(new Tokota());
+    this.model.wc = new TokoSpef(0, []);
+    this.model.act = new TokoSpef(0, []);
+    this.model.quest = new TokoSpef(0, []); */
   }
 
-  tokoCount() {
-    this.model.tokotas = new Array(new Tokota());
+  /* tokoCount() {
+    //this.model.tokotas = new Array(new Tokota());
     for (var i = 0; i < this.model.count-1; i++) {
-      this.model.tokotas = this.model.tokotas.concat(new Array(new Tokota()));
+      //this.model.tokotas = this.model.tokotas.concat(new Array(new Tokota()));
     }
-  }
+  } */
 
 }

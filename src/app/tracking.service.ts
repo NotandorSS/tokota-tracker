@@ -13,7 +13,7 @@ export class TrackingService {
 
   constructor(private db: AngularFirestore) {
     //citiesRef.where("regions", "array-contains", "west_coast")
-    /* this.getTest().subscribe(data => {
+    /* this.getTest(123456).subscribe(data => {
       data.forEach(item => {
         console.log(item.payload.doc.data());
         //this.ids = this.ids.concat([item.payload.doc.data()["id"]]);
@@ -24,12 +24,11 @@ export class TrackingService {
   }
 
   getTracking(): Observable<DocumentChangeAction<{}>[]> {
-    //this.expensesCollection = this.db.collection('/expenses', ref => ref.where(expenseId', '==', this.expenseId));
     return this.db.collection('tracking').snapshotChanges();
   }
 
   addHP(model: HP): void {
-    var temp_id = model.link.substr(-9, 9);
+    /* var temp_id = model.link.substr(-9, 9);
     var temp_start = model.link.indexOf('/art/');
     var temp_end = model.link.indexOf(temp_id);
     var temp_name = model.link.substring(temp_start + 5, temp_end - 1);
@@ -77,20 +76,31 @@ export class TrackingService {
         ids: model.quest.ids
       }
     }
-    this.db.collection('hp').doc(temp_id).set(data);
-  }
-
-
-  getTest(): Observable<DocumentChangeAction<{}>[]> {
-    return this.db.collection('tracking', ref => ref.where("startSub", "==", true)).snapshotChanges();
+    this.db.collection('hp').doc(temp_id).set(data); */
   }
 
   getHP(id: number): Observable<DocumentChangeAction<{}>[]> {
-    return this.db.collection('hp', ref => ref.where("tokotas", "array-contains", id)).snapshotChanges();
+    return this.db.collection('hp', ref => ref.where("tokos", "array-contains", id)).snapshotChanges();
+  }
+
+  getHPDate(id: number, date: string): Observable<DocumentChangeAction<{}>[]> {
+    return this.db.collection('hp', ref => ref.where("tokos", "array-contains", id).where("date", ">=", date)).snapshotChanges();
   }
 
   getTracked(id: number): Observable<firebase.firestore.DocumentSnapshot> {
     return this.db.collection("tracking").doc('' + id).get();
   }
+
+  getWatched(id: number): Observable<firebase.firestore.DocumentSnapshot> {
+    return this.db.collection("watching").doc('' + id).get();
+  }
   
+  /* getWatched(ids: number[]): Observable<firebase.firestore.DocumentSnapshot[]> {
+    let ret: any = [];
+    for(let id of ids) {
+      ret.push(this.db.collection("watching").doc('' + id).get())
+      console.log("IDK what I'm doing")
+    }
+    return ret;
+  } */
 }
