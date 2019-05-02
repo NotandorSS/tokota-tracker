@@ -15,5 +15,5 @@ export class Lists {
         "Ungen333"
     ]
 
-    public static akota_starters = [31056, 31057, 31651, 31652]
+    public static akota_starters = [5899, 31056, 31057, 31651, 31652]
 }

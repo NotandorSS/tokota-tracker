@@ -8,7 +8,6 @@ import { OverviewComponent } from './overview/overview.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
-import { HpFormComponent } from './hp-form/hp-form.component';
 import { FormsModule }   from '@angular/forms';
 import { TrackerHpComponent } from './tracker-hp/tracker-hp.component';
 
@@ -16,7 +15,6 @@ import { TrackerHpComponent } from './tracker-hp/tracker-hp.component';
   declarations: [
     AppComponent,
     OverviewComponent,
-    HpFormComponent,
     TrackerHpComponent
   ],
   imports: [

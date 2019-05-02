@@ -4,10 +4,16 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
+<div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+  If an image appears more than once, please try refreshing.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 <a routerLink="/tokota-view" class="text-dark">
   <h6 class="text-center font-weight-light">back to secret's tokotas</h6>
 </a>
-<a href="https://tokotna.com/imports/index.php?id={{id}}" class="text-dark">
+<a href="https://tokotna.com/imports/index.php?id={{toko.id}}" class="text-dark">
   <h1 class="text-center" *ngIf="toko">{{toko.id}}'s import</h1>
 </a>
 <a href="https://tokotna.com/tribes/index.php?tribe=Lunar+Aegis" class="text-dark">

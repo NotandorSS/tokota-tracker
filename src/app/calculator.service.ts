@@ -17,11 +17,16 @@ export class CalculatorService {
 
   breakdown(entry: HP, toko: Tracking, ids: number[]): Observable<{ "total": number, "breakdown": string }> {
     return new Observable<{ "total": number, "breakdown": string }>(obs => {
-      forkJoin(this.getWatchedArr(ids)).subscribe(watched => {
-        obs.next(this.calculateHP(entry, toko, watched));
-      },
-        err => console.log('Error:', err)
-      );
+      let WatchedObs = this.getWatchedArr(ids);
+      if (WatchedObs.length > 0) {
+        forkJoin(WatchedObs).subscribe(watched => {
+          obs.next(this.calculateHP(entry, toko, watched));
+        },
+          err => console.log('Error:', err)
+        );
+      } else {
+        obs.next(this.calculateHP(entry, toko, []));
+      }
     })
 
   }
@@ -52,13 +57,12 @@ export class CalculatorService {
       if (entry.act.val < 8 && this.PL) addHP(3, "+3(PL " + Act[entry.act.val] + ") ");
       else addHP(2, "+2(" + Act[entry.act.val] + ") ");
     } //activity
-    if (entry.quest && entry.quest.ids.includes(toko.id)) addHP(entry.quest.val, "+"+entry.quest.val+"(WQ) ");
+    if (entry.quest && entry.quest.ids.includes(toko.id)) addHP(entry.quest.val, "+" + entry.quest.val + "(WQ) ");
     if (entry.show) {
       for (let key in entry.show) {
         if (+key == toko.id) {
           let val = 5 - entry.show[key].val;
-          addHP(val, '+' + val + "(" + Show[entry.show[key].val] + " place) ");
-          //TODO encorporate links for shows
+          addHP(val, '+' + val + "(<a href='" + entry.show[key].link + "'>" + Show[entry.show[key].val] + "</a> place) ");
         }
       }
     }//show place
@@ -115,18 +119,28 @@ export class CalculatorService {
       for (let watch of watched) if (Lists.tribemates.includes(watch.owner)) tmid = watch.id;
       if (tmid) addHP(3, '+3(tribemate HC ~' + tmid + "~) ");
     } //tribemate
-    //TODO Aippaq's Bonds oh gods
-    if (entry.arpg) {
-      if (entry.arpg.length == 1) addHP(1, "+1(1 arpg) ");
-      else if (entry.arpg.length == 2) addHP(2, '+2(2 arpg) ');
-      else if (entry.arpg.length >= 3) addHP(3, '+3(3+ arpg) ');
-      //TODO encorporate links for arpgs
+    for (let watch of watched) {
+      if (watch.bonds && watch.bonds.includes(toko.id)) {
+        addHP(3, '+3(~' + watch.id + "~ has Aippaq's Bonds) ");
+        break;
+      }
+      else if (toko.bonds.length > 0 && toko.bonds.includes(watch.id)) {
+        addHP(3, '+3(~' + watch.id + "~ is Aippaq's Bonds relative) ");
+        break;
+      }
+    }//bonds
+    if (entry.arpg && entry.arpg.length >0) {
+      let breakdown = "(arpg";
+      for (let i = 0; i < entry.arpg.length && i < 3; i++) {
+        breakdown += " <a href='" + entry.arpg[i] + "'>"+Number(i+1)+"</a>";
+      }
+      if (entry.arpg.length >= 3) addHP(3, '+3'+breakdown+') ');
+      else  addHP(entry.arpg.length, "+"+entry.arpg.length+breakdown+') ');
     }//arpg
     if (entry.QL) {
       for (let key in entry.QL) {
         if (+key == toko.id) {
-          addHP(entry.show[key].val, '+' + entry.show[key].val + "(quick learner roll) ");
-          //TODO encorporate links for quick learner
+          addHP(entry.QL[key].val, '+' + entry.QL[key].val + "(<a href='" + entry.QL[key].link + "'>quick learner roll</a>) ");
         }
       }
     }//quick learner

@@ -94,6 +94,10 @@ export class TrackingService {
   getWatched(id: number): Observable<firebase.firestore.DocumentSnapshot> {
     return this.db.collection("watching").doc('' + id).get();
   }
+
+  setHP(id: number, total: number): void {
+    this.db.collection('tracking').doc(''+id).update({'HPcount': total});
+  }
   
   /* getWatched(ids: number[]): Observable<firebase.firestore.DocumentSnapshot[]> {
     let ret: any = [];

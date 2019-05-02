@@ -1,19 +1,27 @@
 <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
   This site is a work in progress! Click on the card to see HP.
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
+    <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="container">
   <div class="row justify-content-around">
 
-      <div class="col-auto" *ngFor="let id of ids">
-          <a routerLink="/tracker/{{id}}/hp">
-              <div class="card bg-light mb-3 toko">
-                  <img class="card-img-top border-bottom" src="../../assets/{{id}}HS.png" alt="{{id}} headshot" onError="this.src='../../assets/0HS.png';">
-                  <p class="card-text text-center">{{id}}</p>
-              </div>
-          </a>
+    <div class="col-auto" *ngFor="let toko of tokos">
+      <div class="card bg-light mb-3 toko">
+        <a routerLink="/tracker/{{toko.id}}/hp">
+          <img class="card-img-top border-bottom" src="../../assets/{{toko.id}}HS.png" alt="{{toko.id}} headshot"
+            onError="this.src='../../assets/0HS.png';">
+          <p class="card-text text-center">{{toko.id}}</p>
+        </a>
+        <p class="card-text text-center">HP: {{toko.HPcount}}</p>
+        <p class="card-text text-center"><img class="hierbadge" src={{aveHier}} alt="average" *ngIf="toko.hierarchy == 1"><img class="hierbadge"
+        src={{domHier}} alt="dominant" *ngIf="toko.hierarchy == 2"><img class="hierbadge" src={{alphaHier}}
+        alt="alpha" *ngIf="toko.hierarchy == 3">
+      <img class="hierbadge" src={{novAoAs}} alt="novice" *ngIf="toko.aoas == 1"><img class="hierbadge"
+        src={{aveAoAs}} alt="average" *ngIf="toko.aoas == 2"><img class="hierbadge" src={{excAoAs}}
+        alt="excellent" *ngIf="toko.aoas == 3"></p>
       </div>
+    </div>
   </div>
 </div>

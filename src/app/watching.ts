@@ -7,7 +7,7 @@ export class Watching {
     superstar: number;
     brother_bear: boolean;
     fun_sized: boolean;
-    bonds: [];
+    bonds: number[];
   
     constructor (i: number, o: string) {
       this.id = i;
