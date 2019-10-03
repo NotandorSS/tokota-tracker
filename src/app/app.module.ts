@@ -8,21 +8,23 @@ import { OverviewComponent } from './overview/overview.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
-import { FormsModule }   from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TrackerHpComponent } from './tracker-hp/tracker-hp.component';
+import { NewHpComponent } from './new-hp/new-hp.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     OverviewComponent,
-    TrackerHpComponent
+    TrackerHpComponent,
+    NewHpComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

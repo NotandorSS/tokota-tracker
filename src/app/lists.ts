@@ -7,12 +7,17 @@ export class Lists {
         "animeartist62",
         "DaffoDille",
         "Grimmald",
-        "NECR0AM",
+        "Keksefuzzy",
+        "NorthPaws",
         "OtherworldlyAlchemy",
         "shadowattak1",
         "Sylveon17",
         "taikunfoo",
-        "Ungen333"
+        "Terrwyn-16",
+        "Ungen333",
+        "Yoko318",
+        "EternalFyr",
+        "Evil-BunBun"
     ]
 
     public static akota_starters = [5899, 31056, 31057, 31651, 31652]

@@ -1,0 +1,212 @@
+<div class="container">
+  <form [formGroup]="hpForm" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label class="sr-only">Deviation link</label>
+        <input type="url" class="form-control" formControlName="link" placeholder="Deviation link">
+      </div>
+      <div class="form-group col-md-4">
+        <label class="sr-only">Image source</label>
+        <input type="url" class="form-control" formControlName="src" placeholder="Image source">
+      </div>
+      <div class="form-group col-md-4">
+        <label class="sr-only"> Date posted: </label>
+        <input type="date" class="form-control" formControlName="date">
+      </div>
+    </div> <!-- dev link, source, date-->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="sr-only">Artists</label>
+        <div class="input-group" class="input-group-prepend" formArrayName="artists">
+          <div *ngFor="let artist of artists.controls; let i=index">
+            <input type="text" class="form-control" [formControlName]="i" placeholder="Artist">
+          </div>
+          <button class="btn btn-outline-secondary" type="button" (click)="addArtist()">Add</button>
+        </div>
+      </div>
+    </div> <!-- artists-->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="sr-only">Tokotas featured</label>
+        <div class="input-group" class="input-group-prepend" formArrayName="tokos">
+          <div *ngFor="let toko of tokos.controls; let i=index">
+            <input type="number" class="form-control" [formControlName]="i" placeholder="Toko ID">
+          </div>
+          <button class="btn btn-outline-secondary" type="button" (click)="addToko()">Add</button>
+        </div>
+      </div>
+    </div> <!-- tokotas-->
+    <div class="form-row" *ngIf="hpForm.get('bg').value||qual.value === ''">
+      <div class="form-group col-md-2">
+        <label class="sr-only">Activity</label>
+        <select class="custom-select" formControlName="actival">
+          <option value="">None</option>
+          <option value="1">Hunt</option>
+          <option value="2">Fish</option>
+          <option value="3">Explore</option>
+          <option value="4">Cave</option>
+          <option value="5">Dive</option>
+          <option value="6">Breeding Image</option>
+          <option value="7">Healing Image</option>
+          <option value="8">Rite</option>
+          <option value="9">Show</option>
+          <option value="10">Event</option>
+          <option value="11">Quest</option>
+        </select>
+      </div>
+      <div class="form-group col-md-2" *ngIf="actival.value == 11">
+        <label class="sr-only">Quest gave HP?</label>
+        <input type="number" class="form-control" formControlName="quest" placeholder="HP from quest?">
+      </div>
+      <div class="form-group col-md-2" *ngIf="actival.value != ''">
+        <label>In {{activity(+actival.value)}}?</label>
+      </div>
+      <div class="form-group" formArrayName="actokos" *ngIf="actival.value != ''">
+        <div class="form-check form-check-inline" *ngFor="let toko of tokos.controls; let i=index">
+          <label *ngIf="toko.value&&!headtokos.at(i).value">
+            <input type="checkbox" class="form-check-input" [formControlName]="i"> {{toko.value}}
+          </label>
+        </div>
+      </div>
+    </div> <!-- activity -->
+    <div class="form-row">
+      <div class="form-group col-md-2">
+        <label class="sr-only">Image quality </label>
+        <select class="custom-select" formControlName="qual">
+          <option value=0>Sketch</option>
+          <option value=1>Uncolored</option>
+          <option value=1.5>Uncolored w/ Shading</option>
+          <option value=2>Colored</option>
+          <option value=3>Colored w/ Shading</option>
+          <option value="">Literature</option>
+        </select>
+      </div>
+      <div class="form-group col-md-1" *ngIf="qual.value !== ''">
+        <div class="form-check">
+          <label class="form-check-label"><input type="checkbox" class="form-check-input" formControlName="bg">
+            BG? </label>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="qual.value !== '' else lit">
+        <button class="btn btn-outline-secondary" type="button" (click)="showHeadshots()" *ngIf="!showHSs">Show
+          Headshots?</button>
+      </div>
+      <div class="form-group col-md-1" *ngIf="qual.value !== ''&&showHSs">
+        <label>Headshots: </label>
+      </div>
+      <div class="form-group" *ngIf="qual.value !== ''&&showHSs">
+        <div formArrayName="headtokos">
+          <div class="form-check form-check-inline" *ngFor="let toko of tokos.controls; let i=index">
+            <label>
+              <input type="checkbox" class="form-check-input" [formControlName]="i"> {{toko.value}}
+            </label>
+          </div>
+        </div>
+      </div>
+      <ng-template #lit>
+        <div class="form-group">
+          <label class="sr-only">Word count</label>
+          <input type="number" class="form-control" formControlName="wc" placeholder="Word count">
+        </div>
+      </ng-template>
+    </div> <!-- quality/bg/headshots or lit wc-->
+    <div class="form-row" *ngIf="qual.value !== ''">
+      <div class="form-group col-md-2">
+        <label class="sr-only">Word count</label>
+        <input type="number" class="form-control" formControlName="wc" placeholder="word count">
+      </div>
+      <div class="form-group" formArrayName="wctokos" *ngIf="hpForm.get('wc').value !== ''">
+        <div class="form-check form-check-inline" *ngFor="let toko of tokos.controls; let i=index">
+          <label>
+            <input type="checkbox" class="form-check-input" [formControlName]="i"> {{toko.value}}
+          </label>
+        </div>
+      </div>
+    </div> <!-- non lit word count-->
+    <div class="form-row">
+      <div class="form-group col-md-2">
+        <label class="sr-only">Starter ID</label>
+        <input type="number" class="form-control" formControlName="starter" placeholder="Starter id">
+      </div>
+      <div class="form-check col-md-1">
+        <div class="form-check">
+          <label class="form-check-label"><input type="checkbox" class="form-check-input" formControlName="handler">
+            Handler included</label>
+        </div>
+      </div>
+      <div class="form-group col-md-9">
+        <label class="sr-only">Lore description</label>
+        <input type="text" class="form-control" formControlName="lore" placeholder="Lore description">
+      </div>
+    </div> <!-- starter ID / handler/ lore desc-->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="sr-only">Companions</label>
+        <div class="input-group" class="input-group-prepend" formArrayName="companions">
+          <div *ngFor="let companions of companions.controls; let i=index">
+            <input type="text" class="form-control" [formControlName]="i" placeholder="Companion">
+          </div>
+          <button class="btn btn-outline-secondary" type="button" (click)="addCompanion()">Add</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="sr-only">Link to any other arpg species drawn</label>
+        <div class="input-group" class="input-group-prepend" formArrayName="arpg">
+          <div *ngFor="let arpg of arpg.controls; let i=index">
+            <input type="text" class="form-control" [formControlName]="i" placeholder="Arpg link">
+          </div>
+          <button class="btn btn-outline-secondary" type="button" (click)="addArpg()"
+            *ngIf="arpg.length < 3">Add</button>
+        </div>
+      </div>
+
+    </div> <!-- companions/arpg-->
+    <div class="form-row" *ngIf="actival.value == 9">
+      <div class="form-group col-md-2">
+        <label>Wins: </label>
+      </div>
+      <div class="form-group">
+        <div class="input-group" class="input-group-prepend">
+          <div *ngFor="let toko of showtokos.controls; let i=index">
+            <div formArrayName="showtokos">
+              <select class="custom-select" [formControlName]="i">
+                <option *ngFor="let toko of tokos.controls;" [value]="toko.value">{{toko.value}}</option>
+              </select>
+            </div>
+            <div formArrayName="showplaces">
+              <input type="number" class="form-control" [formControlName]="i" placeholder="Placement">
+            </div>
+            <div formArrayName="showlinks">
+              <input type="text" class="form-control" [formControlName]="i" placeholder="Link">
+            </div>
+          </div>
+          <button class="btn btn-outline-secondary" type="button" (click)="addShow()">Add</button>
+        </div>
+      </div>
+    </div> <!-- win -->
+    <div class="form-row" *ngIf="actival.value == 9||(actival.value >= 1&& 5 >= actival.value)">
+      <div class="form-group col-md-2">
+        <label>Quick Learner: </label>
+      </div>
+      <div class="form-group">
+        <div class="input-group" class="input-group-prepend">
+          <div *ngFor="let toko of qltokos.controls; let i=index">
+            <div formArrayName="qltokos">
+              <select class="custom-select" [formControlName]="i">
+                <option *ngFor="let toko of tokos.controls;" [value]="toko.value">{{toko.value}}</option>
+              </select>
+            </div>
+            <div formArrayName="qlhp">
+              <input type="number" class="form-control" [formControlName]="i" placeholder="HP">
+            </div>
+            <div formArrayName="qlinks">
+              <input type="text" class="form-control" [formControlName]="i" placeholder="Link">
+            </div>
+          </div>
+          <button class="btn btn-outline-secondary" type="button" (click)="addQl()">Add</button>
+        </div>
+      </div>
+    </div> <!-- quick learner -->
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>

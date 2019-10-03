@@ -4,30 +4,21 @@ import {
   DocumentChangeAction,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { HP } from './hp';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrackingService {
 
-  constructor(private db: AngularFirestore) {
-    //citiesRef.where("regions", "array-contains", "west_coast")
-    /* this.getTest(123456).subscribe(data => {
-      data.forEach(item => {
-        console.log(item.payload.doc.data());
-        //this.ids = this.ids.concat([item.payload.doc.data()["id"]]);
-      })
-    },
-      err => console.log(err)
-    ); */
-  }
+  constructor(private db: AngularFirestore) {  }
 
   getTracking(): Observable<DocumentChangeAction<{}>[]> {
     return this.db.collection('tracking').snapshotChanges();
   }
 
-  addHP(model: HP): void {
+  addHP(data: {[k: string]: any}, docID: string): void {
+    console.log(data, docID);
+    this.db.collection('hp_test').doc(docID).set(data);
     /* var temp_id = model.link.substr(-9, 9);
     var temp_start = model.link.indexOf('/art/');
     var temp_end = model.link.indexOf(temp_id);
@@ -92,7 +83,7 @@ export class TrackingService {
   }
 
   getWatched(id: number): Observable<firebase.firestore.DocumentSnapshot> {
-    return this.db.collection("watching").doc('' + id).get();
+    return this.db.collection("watching").doc('i' + id).get();
   }
 
   setHP(id: number, total: number): void {

@@ -31,8 +31,8 @@ export class TrackerHpComponent implements OnInit {
       this.getHP(toko.id, toko.doOver["date"]).subscribe(hp_sheet => {
         this.toko = toko;
         this.hp_sheet = hp_sheet;
+        this.Tiers = [];
         //console.log("this toko", this.toko);
-        console.log("this hp", hp_sheet);
         this.initTiers();
         this.fillHP(toko, hp_sheet);
       })//getHP subscribe
@@ -84,8 +84,11 @@ export class TrackerHpComponent implements OnInit {
           track.aoas = data.get("aoas") ? data.get("aoas") : track.aoas;
           track.aoasdate = data.get("aoasdate") ? data.get("aoasdate") : track.aoasdate;
           track.hierarchy = data.get("hierarchy") ? data.get("hierarchy") : track.hierarchy;
+          track.avedate = data.get("domdate") ? data.get("domdate") : track.avedate;
           track.domdate = data.get("domdate") ? data.get("domdate") : track.domdate;
+          track.alphadate = data.get("domdate") ? data.get("domdate") : track.alphadate;
           track.bonds = data.get("bonds") ? data.get("bonds") : track.bonds;
+          track.tokens = data.get("tokens") ? data.get("tokens") : track.tokens;
           obs.next(track);
         } else {
           obs.next(null);
@@ -143,15 +146,27 @@ export class TrackerHpComponent implements OnInit {
     //0 = sub-ave, 1 = ave-dom, 2 = dom-alpha, 3 = alpha-1
     let cur_hier: number = 0;
 
+    
+    let dom = 1;
+    if (toko.doOver["date"] && toko.domdate >= toko.doOver["date"]) {
+      dom = 0;
+    } else if (toko.startSub) {
+      dom = 2;
+    }
+    for (let token of toko.tokens) {
+      if (!toko.doOver["date"] || token.date >= toko.doOver["date"]) {
+        this.Tiers[0].cards.push({
+          link: token.link,
+          source: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/59c46321-f346-4707-af69-a59f1115d95d/dafys38-b6946542-adcb-4ec8-a45d-5ab991b18032.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU5YzQ2MzIxLWYzNDYtNDcwNy1hZjY5LWE1OWYxMTE1ZDk1ZFwvZGFmeXMzOC1iNjk0NjU0Mi1hZGNiLTRlYzgtYTQ1ZC01YWI5OTFiMTgwMzIucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.Iz1tch_kDTraDbSIZZvAzhlA-b5JBeivJkEYzTDKGfY",
+          name: "HP Tokens",
+          total: token.count * 2,
+          breakdown: token.count + " HP Tokens/Scrolls"
+        });
+        this.Tiers[0].total += token.count * 2;
+      }
+    } //tokens
 
     if (toko.hierarchy > 1 && (!toko.doOver["date"] || toko.domdate >= toko.doOver["date"])) {
-      let dom = 1;
-      if (toko.doOver["date"] && toko.domdate >= toko.doOver["date"]) {
-        dom = 0;
-      }
-      else if (toko.startSub) {
-        dom = 2;
-      }
       this.Tiers[dom].cards.push({
         link: "https://tokotna.com/tribes/index.php?tribe=Lunar+Aegis",
         source: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/59c46321-f346-4707-af69-a59f1115d95d/da8tc73-6ed79a74-a7ad-43aa-9120-e5efca0fdd73.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU5YzQ2MzIxLWYzNDYtNDcwNy1hZjY5LWE1OWYxMTE1ZDk1ZFwvZGE4dGM3My02ZWQ3OWE3NC1hN2FkLTQzYWEtOTEyMC1lNWVmY2EwZmRkNzMucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ZPUSaB5aao_VFOEcGPk_-joVo6F78upbFHMq7n5lYpQ",
@@ -160,7 +175,6 @@ export class TrackerHpComponent implements OnInit {
         breakdown: "+10 HP to your tokota’s overall HP total when you complete its RoDs"
       });
       this.Tiers[dom].total += 10;
-      toko.HPcount += 10;
     } //Tribal Dominance
 
     if (toko.aoasdate && (!toko.doOver["date"] || toko.aoasdate >= toko.doOver["date"])) {
@@ -173,7 +187,6 @@ export class TrackerHpComponent implements OnInit {
           breakdown: "Novice AoAs + Tribal Prestige"
         });
         this.Tiers[0].total += 10;
-        toko.HPcount += 10;
       } //novice AoAs
       else if (toko.aoas == 2) {
         this.Tiers[0].cards.push({
@@ -184,7 +197,6 @@ export class TrackerHpComponent implements OnInit {
           breakdown: "Average AoAs + Tribal Prestige"
         });
         this.Tiers[0].total += 10;
-        toko.HPcount += 10;
       } //average AoAs
       else if (toko.aoas == 3) {
         this.Tiers[0].cards.push({
@@ -195,9 +207,8 @@ export class TrackerHpComponent implements OnInit {
           breakdown: "Excellent AoAs + Tribal Prestige"
         });
         this.Tiers[0].total += 15;
-        toko.HPcount += 15;
       } //excellent AoAs
-    }
+    } //AoAs
 
     for (let hp of hp_sheet) {
       if (hp.tokos) {
@@ -210,7 +221,6 @@ export class TrackerHpComponent implements OnInit {
         console.log("something's wrong?", hp);
       }
       this.calcService.breakdown(hp, toko, hp.tokos).subscribe(breakdown => {
-        //here we get the caving instead of the quest
         let temp: HP_Card = {
           link: hp.link,
           source: hp.src,
@@ -222,8 +232,11 @@ export class TrackerHpComponent implements OnInit {
           temp.source = 'https://shmector.com/_ph/14/607312131.png';
         } // if there's an image link
         //add card to hierarchy tier
-        this.Tiers[cur_hier].cards.push(temp);
-        this.Tiers[cur_hier].total += temp.total;
+
+        if (!(hp.act && hp.act.val == 8 && hp.act.ids.indexOf(toko.id) > -1 && ((hp.name.toUpperCase().includes("ROD") && toko.hierarchy < 2) || (hp.name.toUpperCase().includes("POTA") && toko.hierarchy < 3)))) {
+          this.Tiers[cur_hier].cards.push(temp);
+          this.Tiers[cur_hier].total += temp.total;
+        }
 
         //replace ids in breakdown with links
         let ids = hp.tokos.concat(hp.starter);
@@ -249,132 +262,4 @@ export class TrackerHpComponent implements OnInit {
     } //for
 
   }
-
-
-
-
-  //Bad code. Used to set initial HPcount values. 
-  /* settingHP(toko: Tracking, hp_sheet: HP[]): void {
-    let cur_hier: number = 0;
-
-    toko.HPcount = 0;
-    let obsHP: Observable<number>[] = [];
-
-    if (toko.hierarchy > 1 && (!toko.doOver["date"] || toko.domdate >= toko.doOver["date"])) {
-      let dom = 1;
-      if (toko.doOver["date"] && toko.domdate >= toko.doOver["date"]) {
-        dom = 0;
-      }
-      else if (toko.startSub) {
-        dom = 2;
-      }
-      this.Tiers[dom].cards.push({
-        link: "https://tokotna.com/tribes/index.php?tribe=Lunar+Aegis",
-        source: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/59c46321-f346-4707-af69-a59f1115d95d/da8tc73-6ed79a74-a7ad-43aa-9120-e5efca0fdd73.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU5YzQ2MzIxLWYzNDYtNDcwNy1hZjY5LWE1OWYxMTE1ZDk1ZFwvZGE4dGM3My02ZWQ3OWE3NC1hN2FkLTQzYWEtOTEyMC1lNWVmY2EwZmRkNzMucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ZPUSaB5aao_VFOEcGPk_-joVo6F78upbFHMq7n5lYpQ",
-        name: "Tribal Dominance",
-        total: 10,
-        breakdown: "+10 HP to your tokota’s overall HP total when you complete its RoDs"
-      });
-      this.Tiers[dom].total += 10;
-      toko.HPcount += 10;
-    } //Tribal Dominance
-
-    if (toko.aoasdate && (!toko.doOver["date"] || toko.aoasdate >= toko.doOver["date"])) {
-      if (toko.aoas == 1) {
-        this.Tiers[0].cards.push({
-          link: 'https://tokotna.com/imports/index.php?id=' + toko.id,
-          source: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/59c46321-f346-4707-af69-a59f1115d95d/da8t2q4-5615bb15-5c36-4574-9afe-f1542a5641eb.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU5YzQ2MzIxLWYzNDYtNDcwNy1hZjY5LWE1OWYxMTE1ZDk1ZFwvZGE4dDJxNC01NjE1YmIxNS01YzM2LTQ1NzQtOWFmZS1mMTU0MmE1NjQxZWIucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.N9EKDK6pU40pSa6inD0CVigwplwKWoKDAi8d1PuNoXw",
-          name: "Arms of Akna - Novice",
-          total: 10,
-          breakdown: "Novice AoAs + Tribal Prestige"
-        });
-        this.Tiers[0].total += 10;
-        toko.HPcount += 10;
-      } //novice AoAs
-      else if (toko.aoas == 2) {
-        this.Tiers[0].cards.push({
-          link: 'https://tokotna.com/imports/index.php?id=' + toko.id,
-          source: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/59c46321-f346-4707-af69-a59f1115d95d/da8t2v9-271dcd5a-f830-4b5d-9b17-9410f73306fc.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU5YzQ2MzIxLWYzNDYtNDcwNy1hZjY5LWE1OWYxMTE1ZDk1ZFwvZGE4dDJ2OS0yNzFkY2Q1YS1mODMwLTRiNWQtOWIxNy05NDEwZjczMzA2ZmMucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.Uz_HpORQbqVq2BRW3mUUhdwmo0i7KAxAQpvUPZmZ7vQ",
-          name: "Arms of Akna - Average",
-          total: 10,
-          breakdown: "Average AoAs + Tribal Prestige"
-        });
-        this.Tiers[0].total += 10;
-        toko.HPcount += 10;
-      } //average AoAs
-      else if (toko.aoas == 3) {
-        this.Tiers[0].cards.push({
-          link: 'https://tokotna.com/imports/index.php?id=' + toko.id,
-          source: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/59c46321-f346-4707-af69-a59f1115d95d/da8t2x2-6186bd29-e590-4dd7-a0d0-89f57e43e870.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU5YzQ2MzIxLWYzNDYtNDcwNy1hZjY5LWE1OWYxMTE1ZDk1ZFwvZGE4dDJ4Mi02MTg2YmQyOS1lNTkwLTRkZDctYTBkMC04OWY1N2U0M2U4NzAucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.QkJNJjsJvFdCc3RsxCCyXdbZGuJteMnSRDWOfLKjBQo",
-          name: "Arms of Akna - Excellent",
-          total: 15,
-          breakdown: "Excellent AoAs + Tribal Prestige"
-        });
-        this.Tiers[0].total += 15;
-        toko.HPcount += 15;
-      } //excellent AoAs
-    }
-
-    for (let hp of hp_sheet) {
-      if (hp.tokos) {
-        if (hp.tokos.length > 1) {
-          hp.tokos.splice(hp.tokos.indexOf(toko.id), 1);
-        } else {
-          hp.tokos = []
-        }
-      } else {
-        console.log("something's wrong?", hp);
-      }
-      obsHP.push(new Observable<number>(obs => (
-        this.calcService.breakdown(hp, toko, hp.tokos).subscribe(breakdown => {
-          //here we get the caving instead of the quest
-          let temp: HP_Card = {
-            link: hp.link,
-            source: hp.src,
-            name: hp.name,
-            total: breakdown.total,
-            breakdown: breakdown.breakdown
-          };
-          obs.next(temp.total);
-          if (temp.source == null) {
-            temp.source = 'https://shmector.com/_ph/14/607312131.png';
-          } // if there's an image link
-          //add card to hierarchy tier
-          this.Tiers[cur_hier].cards.push(temp);
-          this.Tiers[cur_hier].total += temp.total;
-
-          //replace ids in breakdown with links
-          let ids = hp.tokos.concat(hp.starter);
-          let newbd: string;
-          for (let id of ids) {
-            let tag = "~" + id + "~";
-            newbd = "<a href='https://tokotna.com/imports/index.php?id=" + id + "'>" + id + "</a>";
-            let replacement = temp.breakdown.replace(tag, newbd);
-            while (temp.breakdown != replacement) {
-              temp.breakdown = temp.breakdown.replace(tag, newbd);
-              replacement = temp.breakdown.replace(tag, newbd);
-            }
-          }
-
-          //check to see if need to switch from one hierarchy tier to the next
-          if (this.Tiers[cur_hier].total >= this.Tiers[cur_hier].req) {
-            this.Tiers[cur_hier + 1].spill = this.Tiers[cur_hier].total - this.Tiers[cur_hier].req;
-            cur_hier += 1;
-            this.Tiers[cur_hier].total = this.Tiers[cur_hier].spill;
-          } //switch hierarchy
-          obs.complete();
-        })) //calcService.breakdown().subscribe();
-      )); //obsHP.push
-    } //for
-
-
-     forkJoin(obsHP).subscribe(hp => {
-      for (let total of hp) {
-        toko.HPcount += total;
-      }
-      this.trackingService.setHP(toko.id, toko.HPcount);
-    },
-      err => console.log('Error:', err)
-    ); 
-  } */
 }

@@ -5,7 +5,7 @@
   </button>
 </div>
 <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
-  If an image appears more than once, please try refreshing.
+  If hp is appearing multiple times, please refresh the page!
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -19,45 +19,53 @@
 <a href="https://tokotna.com/tribes/index.php?tribe=Lunar+Aegis" class="text-dark">
   <h3 class="text-center">Lunar Aegis Tribe</h3>
 </a>
-<!-- <div>
-  {{Tiers}}
-</div> -->
+<div *ngIf="toko.doOver.date && (toko.alphadate || toko.domdate || toko.avedate)" class="text-center">
+  <a [attr.href]="toko.doOver.link" class="btn btn-secondary">
+    <div *ngIf="toko.alphadate != ''; else elseifBlock">Alpha confirmation</div>
+    <ng-template #elseifBlock>
+      <div *ngIf="toko.domdate != ''; else elseBlock">Dominant confirmation</div>
+      <ng-template #elseBlock>
+        <div *ngIf="toko.avedate != ''">Average confirmation</div>
+      </ng-template>
+    </ng-template>
+  </a>
+</div>
 <div id="accordion">
-    <p class="text-center">
-      <ng-container *ngFor="let tier of Tiers">
-        <button class="btn btn-primary" type="button" data-toggle="collapse" [attr.data-target]="'#'+tier.name"
-          aria-expanded="false" [attr.aria-controls]="tier.name" *ngIf="tier.cards[0] || tier.spill">
-          {{tier.name}}
-        </button>
-      </ng-container>
-    </p>
-  
-    <div *ngFor="let tier of Tiers" id={{tier.name}} class="collapse" [attr.aria-labelledby]="tier.name"
-      data-parent="#accordion">
-      <div class="container border bg-light">
-        <div class="row justify-content-around">
-          <div class="col-auto">
-            <h3 class="text-dark">Total HP: {{tier.total}} / {{tier.req}}</h3>
-          </div> <!-- col -->
-        </div> <!-- row -->
-  
-        <div class="row justify-content-around">
-          <div class="col-auto" *ngIf="tier.spill">
-            Carrying {{tier.spill}} HP from previous hierarchy
-          </div> <!-- col -->
-        </div> <!-- row -->
-  
-        <div class="row justify-content-around">
-          <div class="col-auto" *ngFor="let hpcard of tier.cards">
-            <div class="card bg-white mb-3 hp">
-              <a href={{hpcard.link}}>
-                <img class="card-img-top border-bottom thumbnail" src={{hpcard.source}} alt={{hpcard.name}}>
-              </a>
-              <h5 class="card-title">Total = {{hpcard.total}}</h5>
-              <p class="card-text" [innerHTML]="hpcard.breakdown"></p>
-            </div>
-          </div> <!-- col - ngfor -->
-        </div> <!-- row -->
-      </div> <!-- container -->
-    </div>
+  <p class="text-center">
+    <ng-container *ngFor="let tier of Tiers">
+      <button class="btn btn-primary" type="button" data-toggle="collapse" [attr.data-target]="'#'+tier.name"
+        aria-expanded="false" [attr.aria-controls]="tier.name" *ngIf="tier.cards[0] || tier.spill">
+        {{tier.name}}
+      </button>
+    </ng-container>
+  </p>
+
+  <div *ngFor="let tier of Tiers" id={{tier.name}} class="collapse" [attr.aria-labelledby]="tier.name"
+    data-parent="#accordion">
+    <div class="container border bg-light">
+      <div class="row justify-content-around">
+        <div class="col-auto">
+          <h3 class="text-dark">Total HP: {{tier.total}} / {{tier.req}}</h3>
+        </div> <!-- col -->
+      </div> <!-- row -->
+
+      <div class="row justify-content-around">
+        <div class="col-auto" *ngIf="tier.spill">
+          Carrying {{tier.spill}} HP from previous hierarchy
+        </div> <!-- col -->
+      </div> <!-- row -->
+
+      <div class="row justify-content-around">
+        <div class="col-auto" *ngFor="let hpcard of tier.cards">
+          <div class="card bg-white mb-3 hp">
+            <a href={{hpcard.link}}>
+              <img class="card-img-top border-bottom thumbnail" src={{hpcard.source}} alt={{hpcard.name}}>
+            </a>
+            <h5 class="card-title">Total = {{hpcard.total}}</h5>
+            <p class="card-text" [innerHTML]="hpcard.breakdown"></p>
+          </div>
+        </div> <!-- col - ngfor -->
+      </div> <!-- row -->
+    </div> <!-- container -->
   </div>
+</div>

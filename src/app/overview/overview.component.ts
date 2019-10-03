@@ -42,9 +42,10 @@ export class OverviewComponent implements OnInit {
           track.hierarchy = load["hierarchy"] ? load["hierarchy"] : track.hierarchy;
           track.domdate = load["domdate"] ? load["domdate"] : track.domdate;
           track.bonds = load["bonds"] ? load["bonds"] : track.bonds;
-          track.HPcount = load["HPcount"] ? load["HPcount"] : track.HPcount;
+          track.tokens = load["tokens"] ? load["tokens"] : track.tokens;
 
           this.tokos.push(track);
+          this.tokos.sort((a, b): number => {return a.id - b.id;})
         })
         //DO Stuff
       },
