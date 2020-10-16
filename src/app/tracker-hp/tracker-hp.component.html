@@ -13,28 +13,25 @@
 <a routerLink="/tokota-view" class="text-dark">
   <h6 class="text-center font-weight-light">back to secret's tokotas</h6>
 </a>
-<a href="https://tokotna.com/imports/index.php?id={{toko.id}}" class="text-dark">
-  <h1 class="text-center" *ngIf="toko">{{toko.id}}'s import</h1>
+<a *ngIf="toko" href="https://tokotna.com/imports/index.php?id={{toko.id}}" class="text-dark">
+  <h1 class="text-center">{{toko.id}}'s import</h1>
 </a>
 <a href="https://tokotna.com/tribes/index.php?tribe=Lunar+Aegis" class="text-dark">
   <h3 class="text-center">Lunar Aegis Tribe</h3>
 </a>
-<div *ngIf="toko.doOver.date && (toko.alphadate || toko.domdate || toko.avedate)" class="text-center">
-  <a [attr.href]="toko.doOver.link" class="btn btn-secondary">
-    <div *ngIf="toko.alphadate != ''; else elseifBlock">Alpha confirmation</div>
-    <ng-template #elseifBlock>
-      <div *ngIf="toko.domdate != ''; else elseBlock">Dominant confirmation</div>
-      <ng-template #elseBlock>
-        <div *ngIf="toko.avedate != ''">Average confirmation</div>
-      </ng-template>
-    </ng-template>
-  </a>
-</div>
+
+<div *ngIf="toko && toko.doOver.hierarchy == 3; else elseifBlock" class="text-center"><a
+    [attr.href]="toko.doOver.link" class="btn btn-secondary">Alpha confirmation</a></div>
+<ng-template #elseifBlock>
+  <div *ngIf="toko && toko.doOver.hierarchy == 2;" class="text-center"><a
+      [attr.href]="toko.doOver.link" class="btn btn-secondary">Dominant confirmation</a></div>
+</ng-template>
+
 <div id="accordion">
   <p class="text-center">
     <ng-container *ngFor="let tier of Tiers">
       <button class="btn btn-primary" type="button" data-toggle="collapse" [attr.data-target]="'#'+tier.name"
-        aria-expanded="false" [attr.aria-controls]="tier.name" *ngIf="tier.cards[0] || tier.spill">
+        aria-expanded="false" [attr.aria-controls]="tier.name" *ngIf="tier.cards.length > 0 || tier.spill">
         {{tier.name}}
       </button>
     </ng-container>

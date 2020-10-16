@@ -12,12 +12,8 @@ export class NewHpComponent implements OnInit {
     link: [''],
     src: [''],
     date: [''],
-    artists: this.fb.array([
-      this.fb.control(''),
-    ]),
-    tokos: this.fb.array([
-      this.fb.control(''),
-    ]),
+    artists: this.fb.array([ this.fb.control(''), ]),
+    tokos: this.fb.array([ this.fb.control(''), ]),
     qual: [2],
     headtokos: this.fb.array([
       this.fb.control(''),
@@ -209,7 +205,6 @@ export class NewHpComponent implements OnInit {
 
     let data = {
       'link': link,
-      'src': hp.src,
       'name': name,
       'date': hp.date,
       'artists': hp.artists,
@@ -238,6 +233,10 @@ export class NewHpComponent implements OnInit {
         'val': +hp.wc,
         'ids': hp.tokos
       }
+    }
+
+    if (hp.src) {
+      data['src'] = hp.src;
     }
 
     if (hp.starter != '') {
@@ -284,6 +283,15 @@ export class NewHpComponent implements OnInit {
     }
 
     this.ts.addHP(data, docID);
+    this.clear_form();
+  }
+
+  clear_form(){
+    this.hpForm.patchValue({
+      link: '',
+      src: '',
+      wc: ''
+    })
   }
 
   activity(mer: number) {

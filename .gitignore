@@ -42,3 +42,17 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Artwork
+/src/assetsRyuu/*
+/src/assets/*
+
+# Unfinished
+/src/app/ryuukan-viewer/*
+db.py
+results.txt
+secretary.py
+testConSat.py
+toko_breeder.js
+tokota-tracking-firebase-adminsdk-ghwft-a27151a5a2.json
+/src/environments/*

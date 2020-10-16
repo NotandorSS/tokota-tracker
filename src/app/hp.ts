@@ -10,25 +10,28 @@ export class HP {
         public hs: number[],      //id of tokos that aren't fb
         public qual: number,      //SK=0, UC=1, UC/S=1.5, C=2, C/S=3
         public bg: boolean,
-        public wc: TokoSpef,
-        public act: TokoSpef,     //1:hunt,2:fish,3:explore,4:cave,5:dive,6:breed,7:heal,8:rite,9:show,10:event
-        public show: {[k: string]: Spef},  //show = {'123456': new Spef(123456, 3, 'link'), etc}
+        public wc: ITokoSpef,
+        public act: ITokoSpef,     //1:hunt,2:fish,3:explore,4:cave,5:dive,6:breed,7:heal,8:rite,9:show,10:event
+        public show: {[id: string]: ISpef},  //show = {'123456': new Spef(123456, 3, 'link'), etc}
         //show - 1st, 2nd, 3rd places
-        public quest: TokoSpef,
+        public quest: ITokoSpef,
         public handler: boolean,
         public lore: string,      //''=no lore, else lore: description
         public companions: string[],
         public arpg: string[],    //array of links to arpg imports
-        public QL: {[k: string]: Spef},  //QL = {'123456': new Spef(123456, 3, 'link'), etc}
+        public QL: {[id: string]: ISpef},  //QL = {'123456': new Spef(123456, 3, 'link'), etc}
     ) { }
 }
 
-export class Spef {
-    constructor(public id: number, public val: number, public link: string) {}
+interface ISpef {
+    id: number,
+    val: number,
+    link: string
 }
 
-export class TokoSpef {
-    constructor(public val: number, public ids: number[]) {}
+interface ITokoSpef {
+    val: number,
+    ids: number[]
 }
 
 /* features to be added later:

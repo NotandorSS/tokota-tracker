@@ -8,7 +8,7 @@ import {Tracking} from '../tracking';
   styleUrls: ['./overview.component.css']
 })
 export class OverviewComponent implements OnInit {
-  tokos: Tracking[]= [];
+  tokos: Tracking[] = [];
   aveHier: string = 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/59c46321-f346-4707-af69-a59f1115d95d/dd4gje3-85b92b43-114b-4049-9f20-8e904a5ebafd.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU5YzQ2MzIxLWYzNDYtNDcwNy1hZjY5LWE1OWYxMTE1ZDk1ZFwvZGQ0Z2plMy04NWI5MmI0My0xMTRiLTQwNDktOWYyMC04ZTkwNGE1ZWJhZmQucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.7pajUTeAN49L_4XyLTPiS_rDMw6l3Ot2WUj0WxYLQQ0';
   domHier: string = 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/59c46321-f346-4707-af69-a59f1115d95d/da8tc73-6ed79a74-a7ad-43aa-9120-e5efca0fdd73.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU5YzQ2MzIxLWYzNDYtNDcwNy1hZjY5LWE1OWYxMTE1ZDk1ZFwvZGE4dGM3My02ZWQ3OWE3NC1hN2FkLTQzYWEtOTEyMC1lNWVmY2EwZmRkNzMucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ZPUSaB5aao_VFOEcGPk_-joVo6F78upbFHMq7n5lYpQ';
   alphaHier: string = 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/59c46321-f346-4707-af69-a59f1115d95d/dd4gjf5-ec1e7c12-d7dc-4799-8a97-d55e43e248da.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU5YzQ2MzIxLWYzNDYtNDcwNy1hZjY5LWE1OWYxMTE1ZDk1ZFwvZGQ0Z2pmNS1lYzFlN2MxMi1kN2RjLTQ3OTktOGE5Ny1kNTVlNDNlMjQ4ZGEucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.qsRdtHXX1VTLSt-eg6LmSP0nBzP87lFoZcCIu9lP1GU';
@@ -26,7 +26,6 @@ export class OverviewComponent implements OnInit {
   }
 
   getTracking(): void {
-    this.tokos = [];
     this.trackingService.getTracking()
       .subscribe(data => {
         data.forEach(item => {
@@ -42,14 +41,17 @@ export class OverviewComponent implements OnInit {
           track.hierarchy = load["hierarchy"] ? load["hierarchy"] : track.hierarchy;
           track.domdate = load["domdate"] ? load["domdate"] : track.domdate;
           track.bonds = load["bonds"] ? load["bonds"] : track.bonds;
-          track.tokens = load["tokens"] ? load["tokens"] : track.tokens;
+          track.hpTokens = load["hpTokens"] ? load["hpTokens"] : track.hpTokens;
 
-          this.tokos.push(track);
-          this.tokos.sort((a, b): number => {return a.id - b.id;})
+          if (!this.tokos.map(value => value.id).includes(track.id))
+          {
+            this.tokos.push(track);
+            this.tokos.sort((a, b): number => a.id - b.id);
+          }
         })
-        //DO Stuff
       },
         err => console.log(err)
-      );
+    );
   }
+  
 }

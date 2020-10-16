@@ -10,7 +10,9 @@ import { Observable, forkJoin } from 'rxjs';
   providedIn: 'root'
 })
 export class CalculatorService {
-  PL = true;
+  PL = false;
+  LK = false;
+  faction = ""; //either PL or LK
   owner = 'secretrealm';
 
   constructor(private trackingService: TrackingService) { }
@@ -27,18 +29,17 @@ export class CalculatorService {
       } else {
         obs.next(this.calculateHP(entry, toko, []));
       }
-    })
-
+    });
   }
 
   calculateHP(entry: HP, toko: Tracking, watched: Watching[]): { "total": number, "breakdown": string } {
-    let ret = {
+    const calculation = {
       "total": 0,
       "breakdown": ''
     }
     let addHP = (total: number, subString: string) => {
-      ret.total += total;
-      ret.breakdown += subString;
+      calculation.total += total;
+      calculation.breakdown += subString;
     }
     if (entry.src) {
       let hs = (entry.hs && entry.hs.includes(toko.id)) ? 1.1 : 0;
@@ -54,7 +55,7 @@ export class CalculatorService {
       addHP(val, str);
     } //word count
     if (entry.act && entry.act.ids.includes(toko.id)) {
-      if (entry.act.val < 8 && this.PL) addHP(3, "+3(PL " + Act[entry.act.val] + ") ");
+      if (entry.act.val < 8 && (this.PL || this.LK)) addHP(3, "+3(" + this.faction + " " + Act[entry.act.val] + ") ");
       else addHP(2, "+2(" + Act[entry.act.val] + ") ");
     } //activity
     if (entry.quest && entry.quest.ids.includes(toko.id)) addHP(entry.quest.val, "+" + entry.quest.val + "(WQ) ");
@@ -68,14 +69,21 @@ export class CalculatorService {
     }//show place
     if (entry.artists && entry.artists.includes(this.owner)) {
       if (entry.artists.length == 1) addHP(4, "+4(non-com) ");
-      else addHP(2, "+2(collab) ");
+      else {
+        addHP(2, "+2(collab) ");
+        if (toko.social == 2) {
+          addHP(3, "+3(social II) ");
+        } else if (toko.social == 1) {
+          addHP(2, "+2(social) ");
+        }
+      }
     }//artists
     if (entry.handler) addHP(2, "+2(handler) ");
     if (entry.starter) addHP(2, "+2(starter ~" + entry.starter + "~) ");
     if (entry.lore) addHP(2, "+2(" + entry.lore + ") ");
     if (entry.companions) {
       let count = 0;
-      for (let comp of toko.companions) if (entry.companions.includes(comp)) count += 1;
+      for (const comp of toko.companions) if (entry.companions.includes(comp)) count += 1;
       if (count == 1) addHP(1, "+1(1 companion) ");
       else if (count == 2) addHP(2, '+2(2 companions) ');
       else if (count >= 3) addHP(3, '+3(3+ companions) ');
@@ -129,13 +137,13 @@ export class CalculatorService {
         break;
       }
     }//bonds
-    if (entry.arpg && entry.arpg.length >0) {
+    if (entry.arpg && entry.arpg.length > 0) {
       let breakdown = "(arpg";
       for (let i = 0; i < entry.arpg.length && i < 3; i++) {
-        breakdown += " <a href='" + entry.arpg[i] + "'>"+Number(i+1)+"</a>";
+        breakdown += " <a href='" + entry.arpg[i] + "'>" + Number(i + 1) + "</a>";
       }
-      if (entry.arpg.length >= 3) addHP(3, '+3'+breakdown+') ');
-      else  addHP(entry.arpg.length, "+"+entry.arpg.length+breakdown+') ');
+      if (entry.arpg.length >= 3) addHP(3, '+3' + breakdown + ') ');
+      else addHP(entry.arpg.length, "+" + entry.arpg.length + breakdown + ') ');
     }//arpg
     if (entry.QL) {
       for (let key in entry.QL) {
@@ -144,7 +152,7 @@ export class CalculatorService {
         }
       }
     }//quick learner
-    return ret
+    return calculation;
   }
 
   getWatchedArr(ids: number[]): Observable<Watching>[] {

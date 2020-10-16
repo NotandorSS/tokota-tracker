@@ -1,6 +1,6 @@
 export class Tracking {
   //optional keys
-  doOver: {[k: string]: string} = {};
+  doOver: {date: string, link: string, hierarchy: number|null} = {date: "", link: "", hierarchy: null};
   build: number = 0;      //0=toko(optional), 1=toki, 2=dire, 3=akota
   companions: string[] = []; 
   startSub: boolean = false;
@@ -11,7 +11,8 @@ export class Tracking {
   avedate = '';
   alphadate = '';
   bonds: number[] = [];
-  tokens: {link: string, count: number, date: string}[] = [];
+  hpTokens = 0;
+  social = 0;
   constructor (public id: number, public male: boolean) {
   }
 }
